@@ -1,7 +1,6 @@
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
 
-export default function CollectionCard({darkMode, collection }: any) {
+export default function CollectionCard({ darkMode, collection }: any) {
   return (
     <div
       className={
@@ -13,7 +12,7 @@ export default function CollectionCard({darkMode, collection }: any) {
       <div className="w-[257px] h-[350px]">
         <Image src={`/${collection.image}`} width={260} height={150} alt="" />
       </div>
-    
+
       <div
         className={
           darkMode

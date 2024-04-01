@@ -1,21 +1,42 @@
 "use client";
 
-import SportCard from ".//page/card";
-import { players } from "../data";
-import { collections } from "../data";
-import Image from "next/image";
-import CollectionCard from ".//page/collectionCard";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faMoon,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { faSun } from "@fortawesome/free-solid-svg-icons";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { collections, players } from "../data";
+import SportCard from ".//page/card";
+import CollectionCard from ".//page/collectionCard";
 
 export default function Home() {
   let [collection, setCollection] = useState(collections);
   let [startIndex, setStartIndex] = useState(0);
   let [darkMode, setDarkMode] = useState(true);
+  let [noOfCardsVisible, setNoOfCardsVisible] = useState(3);
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.screen.width <= 650) {
+        setNoOfCardsVisible(1);
+      } else if (window.innerWidth <= 1024) {
+        setNoOfCardsVisible(2);
+      } else {
+        setNoOfCardsVisible(3);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const previous = () => {
     if (startIndex > 0) {
@@ -62,26 +83,36 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
           {players.map((player: any, i: any) => (
             <SportCard player={player} key={i} darkMode={darkMode} />
           ))}
-          <div className={
-        darkMode ? "bg-[#3B3E47] w-72 p-2" : "bg-[#FFFFFF] w-72 p-2 "
-      }>
+          <div
+            className={darkMode ? "bg-[#3B3E47] p-2" : "bg-[#FFFFFF] w-72 p-2 "}
+          >
             <div>
-              <Image src="/ad.png" width={270} height={100} alt="#" />
-              <p className="relative  bottom-[271px] left-[230px] bg-[#040404] text-white w-10 px-2 ">
+              <img src="/ad.png" alt="#" className="w-full" />
+              <p className="hidden lg:block relative left-28 bottom-40 xl:left-48 xl:bottom-56 2xl:left-52 2xl:bottom-60 bg-[#040404] text-white w-10 px-2 ">
                 Ad
               </p>
             </div>
 
-            <h3 className={
-        darkMode ? "text-center text-white text-2xl font-sans font-semibold" : "text-center text-black text-2xl font-sans font-semibold"
-      }>
+            <h3
+              className={
+                darkMode
+                  ? "text-center text-white text-2xl font-sans font-semibold"
+                  : "text-center text-black text-2xl font-sans font-semibold"
+              }
+            >
               Advertisement title
             </h3>
-            <p className={darkMode ? "text-center text-white mt-4 text-m" : "text-center text-black mt-4 text-m"}>
+            <p
+              className={
+                darkMode
+                  ? "text-center text-white mt-4 text-m"
+                  : "text-center text-black mt-4 text-m"
+              }
+            >
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adolorum
               quas, expedita voluptatibus, obcaecati quos eveniet, fugit quia
               saepe eum nisi ex mollitia itaque labore error mollitia itaque
@@ -136,11 +167,15 @@ export default function Home() {
               ></FontAwesomeIcon>
             </div>
           </div>
-          <div className="flex justify-between w-[60%]  ">
+          <div className="flex justify-between">
             {collection
-              .slice(startIndex, startIndex + 3)
+              .slice(startIndex, startIndex + noOfCardsVisible)
               .map((collection: any, i: any) => (
-                <CollectionCard collection={collection} key={i} darkMode={darkMode} />
+                <CollectionCard
+                  collection={collection}
+                  key={i}
+                  darkMode={darkMode}
+                />
               ))}
           </div>
           <div className="flex flex-row items-center ">
